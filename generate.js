@@ -8,8 +8,8 @@ const openai = new OpenAI({
   baseURL: `${process.env.AI_URL}`,
   apiKey: `${process.env.AI_API}`,
   defaultHeaders: {
-    "HTTP-Referer": "<YOUR_SITE_URL>",
-    "X-Title": "<YOUR_SITE_NAME>",
+    "HTTP-Referer": "https://kenyanmusk.onrender.com",
+    "X-Title": "kmusk",
   },
 });
 
@@ -20,7 +20,7 @@ function getRandom(arr) {
 
 const getData = async (asset) => {
   try {
-    const res = await axios.get(`https://api.coincap.io/v2/assets/${asset}/history?interval=d1`)
+    const res = await axios.get(`https://api.coincap.io/v2/assets/${asset}/history?interval=h6`)
     return res.data;
   } catch (e) {
     console.error('Error fetching Crypto Data: ', e)
@@ -29,7 +29,7 @@ const getData = async (asset) => {
 
 const getRates = async (asset) => {
   try {
-    const res = await axios.get(`api.coincap.io/v2/assets/${asset}/markets`)
+    const res = await axios.get(`https://api.coincap.io/v2/assets/${asset}/markets`)
     return res.data;
   } catch (e) {
     console.error('Error fething exchanges: ', e)
@@ -75,8 +75,8 @@ async function generateRandomTweet(asset) {
   Your tweet must:  
   - **Hint at whether to go long or short** based on your analysis.  
   - Optionally suggest a **holding period (3-24 hours)**.  
-  - Reference **funding rates, liquidity levels, or recent price action**.  
-  - Give a hint on which places to buy ${asset} for cheap and resell it according to these rates: ${exchange}
+  - Reference **funding rates, liquidity levels, or recent price action**, remember to be precise while mentioning prices.  
+  - Give a hint on which places (mention them by name and list the potential profits) to buy ${asset} for cheap and resell it according to these rates: ${exchange}
   - Be sharp, no-nonsense, and aligned with your trading persona.  
   
   For inspiration, here is an example: "${postExample}" and make sure to mention a #${asset}`;  
@@ -86,7 +86,6 @@ async function generateRandomTweet(asset) {
       model: "deepseek/deepseek-chat-v3-0324:free",
       messages: [{ role: "user", content: prompt }]
     });
-    console.log(completion)
     const tweet = completion.choices[0].message.content.trim();
     return tweet;
   } catch (error) {
