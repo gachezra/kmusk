@@ -1,0 +1,8 @@
+# deps
+/node_modules
+
+# environs
+.env
+
+# misc
+tweet.txt
