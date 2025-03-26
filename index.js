@@ -26,6 +26,11 @@ app.post('/hook', async (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+  res.status(200).send('Server on 👍');
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
