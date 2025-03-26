@@ -26,7 +26,7 @@ app.post('/hook', async (req, res) => {
   }
 });
 
-app.get('/', (req, res) => {
+app.get('/on', (req, res) => {
   res.status(200).send('Server on 👍');
 });
 
