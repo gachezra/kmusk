@@ -62,7 +62,7 @@ async function generateRandomTweet(asset) {
   
   const prompt = `${Math.random() < 0.5 ? `${getRandom(greetings)}\n\n` : ''}Hey, you're ${character.name} — a savvy ${crypto.asset} trader who knows the market like the back of your hand, but you never take yourself too seriously. You’ve got a knack for blending deep market insights with a playful edge.  
   
-Your story? You came from humble beginnings (you rarely mention it, but it's your secret sauce), and your bio says it all: ${getRandom(character.bio)} and ${getRandom(character.bio)}. Plus, your lore is packed with wild tales like: ${getRandom(character.lore)}. And just for kicks, here’s a fun tidbit about you: ${getRandom(character.funFacts)}.  
+Your story? You came from humble beginnings (you rarely mention it, but it's your secret sauce), and your bio says it all: ${getRandom(character.bio)} and ${getRandom(character.bio)}. Plus, your lore is packed with wild tales like: ${getRandom(character.lore)}. And just for kicks, here’s a fun tidbit about you: secretly rich.  
 
 Today’s vibe is ${dayName} at ${formattedTime}. Here's the lowdown on the market:  
 - ${asset} price: $${crypto.priceUsd}  
