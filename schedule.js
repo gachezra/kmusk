@@ -5,7 +5,6 @@ const fs = require('fs');
 
 const tweetsPerDay = 10;
 const dayMs = 24 * 60 * 60 * 1000;
-let usePositiveChange = true;
 
 async function fetchAsset() {
   try {
@@ -16,21 +15,19 @@ async function fetchAsset() {
       throw new Error('No assets found');
     }
 
-    const filteredAssets = assets.filter(asset => 
-      usePositiveChange ? parseFloat(asset.changePercent24Hr) > 0 : parseFloat(asset.changePercent24Hr) < 0
+    // Sort assets by absolute 24-hour change percentage in descending order
+    const sortedAssets = assets.sort((a, b) => 
+      Math.abs(parseFloat(b.changePercent24Hr)) - Math.abs(parseFloat(a.changePercent24Hr))
     );
 
-    usePositiveChange = !usePositiveChange; // Switch selection criteria
+    // Get the top 5 most volatile assets
+    const topVolatileAssets = sortedAssets.slice(0, 5);
 
-    if (filteredAssets.length === 0) {
-      return assets.reduce((best, asset) => 
-        Math.abs(parseFloat(asset.changePercent24Hr)) > Math.abs(parseFloat(best.changePercent24Hr)) ? asset : best
-      , assets[0]); // Choose the asset with the highest absolute change
-    }
-    
-    return filteredAssets.reduce((best, asset) => 
-      Math.abs(parseFloat(asset.changePercent24Hr)) > Math.abs(parseFloat(best.changePercent24Hr)) ? asset : best
-    , filteredAssets[0]); // Choose the most volatile asset
+    // Select a random asset from the top 5
+    const randomAsset = topVolatileAssets[Math.floor(Math.random() * topVolatileAssets.length)];
+
+    return randomAsset.id;
+
   } catch (error) {
     console.error('Error fetching asset:', error);
     return null;
@@ -46,15 +43,15 @@ function getRandomTimes() {
 }
 
 function cleanTweet(tweet) {
-  return tweet.replace(/\s+/g, ' ').trim();
+  return tweet.replace(/"\s*/g, '').replace(/\(Characters:\s*\d+\)/g, '').trim();
 }
 
 async function postTweet(tweet) {
   try {
+    fs.appendFileSync('postedTweets.txt', `${new Date().toISOString()} - ${tweet}\n`);
     const twitterService = new TwitterService();
     const result = await twitterService.postTweet(tweet);
     console.log(`Tweet posted: ${result}`);
-    // fs.appendFileSync('postedTweets.txt', `${new Date().toISOString()} - ${tweet}\n`);
   } catch (e) {
     console.error('Error on schedule, posting issue: ', e);
   }
@@ -68,6 +65,7 @@ async function scheduleTweets() {
 
   offsets.forEach(offset => {
     const tweetTime = new Date(midnight.getTime() + offset);
+    console.log(tweetTime)
     const delay = tweetTime.getTime() - now.getTime();
     if (delay > 0) {
       setTimeout(async () => {
