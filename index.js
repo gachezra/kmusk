@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const scheduleTweets = require('./schedule');
+const { sendTweet, scheduleNextTweet } = require('./schedule');
 const generateReplyTweet = require('./reply');
 
 const app = express();
@@ -9,8 +9,8 @@ const PORT = process.env.PORT || 3000;
 // Parse incoming JSON payloads
 app.use(bodyParser.json());
 
-// Start scheduling tweets (10 random tweets per day)
-scheduleTweets();
+sendTweet();
+scheduleNextTweet();
 
 // Webhook endpoint for generating reply tweets
 app.post('/hook', async (req, res) => {
@@ -27,6 +27,7 @@ app.post('/hook', async (req, res) => {
 });
 
 app.get('/on', (req, res) => {
+  console.log('niko on')
   res.status(200).send('Server on 👍');
 });
 
