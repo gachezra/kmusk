@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { sendTweet, scheduleNextTweet } = require('./schedule');
+const { sendTweet } = require('./schedule');
 const generateReplyTweet = require('./reply');
 
 const app = express();
@@ -10,7 +10,6 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 sendTweet();
-scheduleNextTweet();
 
 // Webhook endpoint for generating reply tweets
 app.post('/hook', async (req, res) => {

@@ -54,6 +54,7 @@ async function sendTweet() {
     let tweet = await generateRandomTweet(asset);
     tweet = cleanTweet(tweet);
     console.log(`Tweet generated at ${new Date().toLocaleTimeString()}: ${tweet}`);
+    scheduleNextTweet()
     await postTweet(tweet);
   } catch (error) {
     console.error("Error generating tweet:", error);
@@ -73,4 +74,4 @@ function scheduleNextTweet() {
   }, delay);
 }
 
-module.exports = { sendTweet, scheduleNextTweet };
+module.exports = { sendTweet };

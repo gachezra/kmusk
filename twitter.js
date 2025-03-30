@@ -15,9 +15,16 @@ class TwitterService {
 
   async postTweet(tweetText) {
     try {
-      const response = await this.readWriteClient.v2.tweet(tweetText);
-      console.log('Tweet posted successfully:', response);
-      return response;
+      const user = await this.readWriteClient.v1.verifyCredentials();
+      console.log('Client successfully authenticated as:', user.screen_name);
+      if (user.screen_name) {
+        console.log('Tweet to be sent:', tweetText)
+        const response = await this.readWriteClient.v2.tweet(tweetText);
+        console.log('Tweet posted successfully:', response);
+        return response;
+      } else {
+        console.error(user)
+      }
     } catch (error) {
       console.error('Error posting tweet:', error);
       throw error;
