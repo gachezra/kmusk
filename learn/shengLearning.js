@@ -67,9 +67,9 @@ Text: "${text}"
       };
 
       const prompt = `
-Rewrite the tweet below using Kenyan Sheng to reflect authentic Kenyan Twitter/Bluesky culture. ${levelDescription[shengLevel]} Ensure the revised tweet is natural, under 200 graphemes, and suitable for posting without additional explanations or bonus texts. Incorporate emojis where appropriate.
+Rewrite the tweet below using Kenyan Sheng to reflect authentic Kenyan Bluesky culture. ${levelDescription[shengLevel]} Ensure the revised tweet is natural, under 200 graphemes, and suitable for posting without additional explanations or bonus texts. Incorporate emojis where appropriate.
 
-Sheng examples: ${shengExamples.join(', ')}
+Sheng examples: ${shengExamples.join(', ')}. Feel free to include one additional Sheng word for extra flavor.
 
 Original tweet: "${originalTweet}"
 
@@ -78,8 +78,6 @@ Please provide the output in the following format:
 tweet: 'Your rewritten tweet here'
 notes: 'Any additional notes here'
 `;
-
-
 
       const completion = await openai.chat.completions.create({
         model: "deepseek/deepseek-chat-v3-0324:free",
