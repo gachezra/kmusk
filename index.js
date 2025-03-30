@@ -1,13 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { sendTweet } = require('./schedule');
-const generateReplyTweet = require('./reply');
+const { sendTweet } = require('./agent/schedule');
+const MonitorHandler = require('./monitor/monitorHandler');
+const generateReplyTweet = require('./agent/reply');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 38000;
 
 // Parse incoming JSON payloads
 app.use(bodyParser.json());
+
+// Initialize the monitor handler
+const monitorHandler = new MonitorHandler();
+
+// Start monitoring Bluesky for mentions and interactions
+monitorHandler.startMonitoring(2 * 60 * 1000);
 
 sendTweet();
 

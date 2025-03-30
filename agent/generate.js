@@ -1,17 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const OpenAI = require('openai');
-require('dotenv').config();
-
-const openai = new OpenAI({
-  baseURL: `${process.env.AI_URL}`,
-  apiKey: `${process.env.AI_API}`,
-  defaultHeaders: {
-    "HTTP-Referer": "https://kenyanmusk.onrender.com",
-    "X-Title": "kmusk",
-  },
-});
+const openai = require('../config/openai');
+const ShengLearning = require('../learn/shengLearning');
+const shengLearning = new ShengLearning();
 
 // Utility: get a random element from an array
 function getRandom(arr) {
@@ -68,12 +60,13 @@ Today’s vibe is ${dayName} at ${formattedTime}. Here's the lowdown on the mark
 - ${asset} price: $${crypto.priceUsd}  
 - Data recorded on: ${crypto.date}
 
-Now, with your signature style ("${getRandom(character.style.post)}"), craft a tweet that's witty, chill, and totally offbeat—keep it under 280 characters. Mix things up:  
+Now, with your signature style ("${getRandom(character.style.post)}"), craft a tweet that's witty, chill, and totally offbeat—make sure to keep it under 200 graphemes, but don't mention it much. Mix things up:  
 - Hint at whether it's a good time to go long or short.  
 - Optionally mention a holding period (3-24 hours) if it feels right.  
 - Drop some numbers by referencing funding rates, liquidity, or recent price action (precision is key).  
 - Give a shout-out to some hotspots (name 'em and tease potential profits) where ${asset} can be scooped up cheap and flipped for gains according to these rates: ${exchange}  
 - Above all, be sharp, a little irreverent, and unmistakably you.
+- Assume it is a real tweet you are sending, so restrain from mentioning anything that might break the 4th wall
 
 For a little inspo, here’s an example: "${postExample}"—and don’t forget to throw in a #${asset}!`; 
 
@@ -82,7 +75,11 @@ For a little inspo, here’s an example: "${postExample}"—and don’t forget t
       model: "deepseek/deepseek-chat-v3-0324:free",
       messages: [{ role: "user", content: prompt }]
     });
-    const tweet = completion.choices[0].message.content.trim();
+    let tweet = completion.choices[0].message.content.trim();
+    const shengLevel = Math.random() > 0.5 ? 'moderate' : 'light';
+    tweet = await shengLearning.enhanceTweetWithSheng(tweet, shengLevel);
+    
+    await shengLearning.extractPotentialShengWords(tweet);
     return tweet;
   } catch (error) {
     console.error("Error generating random tweet:", error);

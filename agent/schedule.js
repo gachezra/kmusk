@@ -1,6 +1,6 @@
 const axios = require('axios');
 const generateRandomTweet = require('./generate');
-const TwitterService = require('./twitter');
+const BlueskyService = require('../monitor/blueSkyService');
 const fs = require('fs');
 
 async function fetchAsset() {
@@ -31,15 +31,15 @@ async function fetchAsset() {
   }
 }
 
-function cleanTweet(tweet) {
-  return tweet.replace(/"\s*/g, '').replace(/\(Characters:\s*\d+\)/g, '').trim();
+function cleanTweet(content) {
+  return content;
 }
 
-async function postTweet(tweet) {
+async function postTweet(content) {
   try {
-    fs.appendFileSync('postedTweets.txt', `${new Date().toISOString()} - ${tweet}\n`);
-    const twitterService = new TwitterService();
-    const result = await twitterService.postTweet(tweet);
+    fs.appendFileSync('postedTweets.txt', `${new Date().toISOString()} - ${content}\n`);
+    const blueskyService = new BlueskyService();
+    const result = await blueskyService.postSkeet(content);
     console.log(`Tweet posted: ${result}`);
   } catch (e) {
     console.error('Error posting tweet: ', e);
@@ -73,5 +73,6 @@ function scheduleNextTweet() {
     scheduleNextTweet();
   }, delay);
 }
+
 
 module.exports = { sendTweet };
