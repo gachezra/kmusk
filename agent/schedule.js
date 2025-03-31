@@ -58,6 +58,7 @@ async function sendTweet() {
     await postTweet(tweet);
   } catch (error) {
     console.error("Error generating tweet:", error);
+    scheduleNextTweet();
   }
 }
 
