@@ -71,7 +71,6 @@ const getRates = async (asset) => {
 };
 
 async function generateRandomTweet(asset, overridePrompt = null) {
-  console.log({baseURL: `${process.env.AI_URL}`, apiKey: `${process.env.AI_API}`});
   const charFilePath = path.join(__dirname, "char.json");
   const charData = fs.readFileSync(charFilePath, "utf8");
   const character = JSON.parse(charData);
@@ -132,7 +131,6 @@ Go.`;
     }
 
     let tweet = completion.choices[0].message.content.trim();
-    console.log("Raw tweet content from API:", JSON.stringify(tweet));
 
     // Language-specific enhancements: sheng or swahili
     if (languagePreference === "sheng" || languagePreference === "swahili") {
@@ -184,13 +182,13 @@ Go.`;
 }
 
 // allow running this file directly for a quick generation test
-if (require.main === module) {
-  (async () => {
-    console.log("Running standalone test of generateRandomTweet...");
-    const result = await generateRandomTweet("bitcoin", "TEST PROMPT: Write a brief market insight as if you were a seasoned trader.");
-    console.log("Standalone test result:", result);
-  })();
-}
+// if (require.main === module) {
+//   (async () => {
+//     console.log("Running standalone test of generateRandomTweet...");
+//     const result = await generateRandomTweet("bitcoin", "TEST PROMPT: Write a brief market insight as if you were a seasoned trader.");
+//     console.log("Standalone test result:", result);
+//   })();
+// }
 
 module.exports = { generateRandomTweet };
 
